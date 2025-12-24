@@ -1,0 +1,5 @@
+{
+  "name": "PaySignal Enterprise Console",
+  "description": "Production-grade internal console for distributed payment monitoring, incident replay, and anomaly detection.",
+  "requestFramePermissions": []
+}

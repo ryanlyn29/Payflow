@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-worker
+  namespace: paysignal
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: go-worker
+  template:
+    metadata:
+      labels:
+        app: go-worker
+    spec:
+      containers:
+      - name: go-worker
+        image: paysignal/go-worker:latest
+        env:
+        - name: POSTGRES_HOST
+          value: postgres
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: paysignal
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+        - name: REDIS_URL
+          value: redis://redis:6379
+        - name: SQS_QUEUE_URL
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: sqs-queue-url
+        - name: SQS_DLQ_URL
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: sqs-dlq-url
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: region
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: secret-access-key
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-worker
+  namespace: paysignal
+spec:
+  selector:
+    app: go-worker
+  ports:
+  - port: 8082
+    targetPort: 8082
+
+
+
+
+

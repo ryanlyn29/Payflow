@@ -1,0 +1,31 @@
+{
+  "Queues": [
+    {
+      "QueueName": "payment-events",
+      "Attributes": {
+        "VisibilityTimeout": "30",
+        "MessageRetentionPeriod": "345600",
+        "ReceiveMessageWaitTimeSeconds": "20",
+        "FifoQueue": "false"
+      },
+      "DeadLetterQueue": {
+        "QueueName": "payment-events-dlq",
+        "MaxReceiveCount": 15
+      }
+    },
+    {
+      "QueueName": "audit-events",
+      "Attributes": {
+        "VisibilityTimeout": "60",
+        "MessageRetentionPeriod": "2592000",
+        "ReceiveMessageWaitTimeSeconds": "10",
+        "FifoQueue": "false"
+      }
+    }
+  ]
+}
+
+
+
+
+
